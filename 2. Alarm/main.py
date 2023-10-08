@@ -3,7 +3,7 @@
 import machine
 import time
 #  Variable
-delay = 500 # ms
+delay = 1000 # ms
 #  Configuration GPIO pin I/O
 botton = machine.Pin(15, machine.Pin.IN) #  digital INPUT
 led = machine.Pin(2, machine.Pin.OUT) #  digital OUTPUT
