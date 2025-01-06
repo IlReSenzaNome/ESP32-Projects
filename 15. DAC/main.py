@@ -1,0 +1,31 @@
+import math
+import time
+from machine import Pin, DAC
+
+# Configuración del DAC en el pin 25 (puedes usar pin 26 también)
+dac = DAC(Pin(25))
+
+# Parámetros de la señal sinusoidal
+frecuencia = 1  # Frecuencia de la señal sinusoidal en Hz
+amplitud = 255  # Amplitud máxima para DAC (0-255 para 8 bits)
+offset = 128     # Desplazamiento (para que la onda no sea negativa)
+
+# Tiempo de muestreo (intervalo entre muestras)
+sample_rate = 20  # Muestras por segundo (0.01 s entre muestras)
+
+# Generar la señal sinusoidal y controlar la intensidad del LED
+while True:
+    for i in range(360):  # 360 grados en una vuelta
+        # Convertir el ángulo en radianes
+        angulo = math.radians(i)
+        # Generar el valor de la señal sinusoidal (rango -1 a 1)
+        valor_seno = math.sin(angulo)
+        
+        # Escalar el valor seno a un rango de 0 a 255 para el DAC
+        valor_dac = int(amplitud * (valor_seno + 1) / 2)  # Normaliza a 0-255
+        
+        # Enviar el valor al DAC para controlar el brillo del LED
+        dac.write(valor_dac)
+        
+        # Esperar el tiempo de muestreo
+        time.sleep(1 / sample_rate)
