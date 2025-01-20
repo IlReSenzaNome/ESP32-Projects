@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="Assets/styles.css" />
+    <title>Control de Motor, LED y Servo</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Control de Motor, LED y Servomotor</h1>
+
+      <div class="control">
+        <h2>Motor DC</h2>
+        <form action="/motor" method="get">
+          <label for="motor-speed">Velocidad:</label>
+          <input
+            type="range"
+            id="motor-speed"
+            name="speed"
+            min="0"
+            max="2"
+            step="1"
+          />
+          <input type="submit" value="Ajustar" />
+        </form>
+      </div>
+
+      <div class="control">
+        <h2>LED</h2>
+        <form action="/led" method="get">
+          <label for="led-brightness">Brillo:</label>
+          <input
+            type="range"
+            id="led-brightness"
+            name="brightness"
+            min="0"
+            max="100"
+            step="10"
+          />
+          <input type="submit" value="Ajustar" />
+        </form>
+      </div>
+
+      <div class="control">
+        <h2>Servomotor</h2>
+        <form action="/servo" method="get">
+          <label for="servo-angle">Ángulo:</label>
+          <input
+            type="range"
+            id="servo-angle"
+            name="angle"
+            min="0"
+            max="180"
+            step="1"
+          />
+          <input type="submit" value="Ajustar" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
