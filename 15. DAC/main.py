@@ -16,16 +16,8 @@ sample_rate = 20  # Muestras por segundo (0.01 s entre muestras)
 # Generar la señal sinusoidal y controlar la intensidad del LED
 while True:
     for i in range(360):  # 360 grados en una vuelta
-        # Convertir el ángulo en radianes
         angulo = math.radians(i)
-        # Generar el valor de la señal sinusoidal (rango -1 a 1)
         valor_seno = math.sin(angulo)
-        
-        # Escalar el valor seno a un rango de 0 a 255 para el DAC
         valor_dac = int(amplitud * (valor_seno + 1) / 2)  # Normaliza a 0-255
-        
-        # Enviar el valor al DAC para controlar el brillo del LED
         dac.write(valor_dac)
-        
-        # Esperar el tiempo de muestreo
         time.sleep(1 / sample_rate)
