@@ -10,7 +10,7 @@ motor_pwm.freq(25000)
 motor_speed = 0  # Velocidad inicial del motor (0 = 0%, 1 = 50%, 2 = 100%)
 
 # Inicializar LED controlado por PWM
-led_pwm = PWM(Pin(15))
+led_pwm = PWM(Pin(13))
 led_pwm.freq(1000)
 led_brightness = 0  # Brillo inicial del LED (0-100%)
 
@@ -45,7 +45,8 @@ def connect_wifi():
     ip_address = wlan.ifconfig()[0]
     oled.fill(0)
     oled.text("Conectado a WiFi!", 0, 0)
-    oled.text(f"IP: {ip_address}", 0, 10)
+    oled.text(f"IP: ", 0, 10)
+    oled.text(ip_address, 0, 20)
     oled.show()
     return ip_address
 
@@ -71,18 +72,13 @@ def set_led_brightness(brightness):
 def set_servo_angle(angle):
     global servo_angle
     servo_angle = angle
-    duty = map_value(angle, 0, 180, 20, 120)
+    duty = map_value(angle, 0, 180, 1000, 9000)  # Ajustar a rango PWM de ESP32
     servo_pwm.duty_u16(duty)
 
 # Actualizar la pantalla OLED
 def update_oled():
     oled.fill(0)
-    oled.text("Motor:", 0, 0)
-    oled.text(f"Vel: {motor_speed * 50}%", 0, 10)
-    oled.text("LED:", 0, 30)
-    oled.text(f"Brillo: {led_brightness}%", 0, 40)
-    oled.text("Servo:", 0, 50)
-    oled.text(f"Ang: {servo_angle}°", 0, 60)
+    oled.text("M:{0}% L:{1}% S:{2}°".format(motor_speed * 50, led_brightness, servo_angle), 0, 0)
     oled.show()
 
 # Iniciar servidor web
