@@ -1,13 +1,11 @@
-from machine import Pin, PWM, SoftI2C
+from machine import Pin, DAC, PWM, SoftI2C
 import time
 import network
 import socket
 from ssd1306 import SSD1306_I2C
 
-# Inicializar PWM para el motor DC
-motor_pwm = PWM(Pin(26))
-motor_pwm.freq(25000)
-motor_speed = 0  # Velocidad inicial del motor (0 = 0%, 1 = 50%, 2 = 100%)
+# Inicializar DAC para el motor DC
+motor_dac = DAC(Pin(26))  # Usamos el canal DAC2 en GPIO 26
 
 # Inicializar LED controlado por PWM
 led_pwm = PWM(Pin(13))
@@ -26,8 +24,8 @@ i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
 oled = SSD1306_I2C(WIDTH, HEIGHT, i2c)
 
 # Configuración WiFi
-SSID = "NETLIFE_VIVAS"
-PASSWORD = "Gene-1727479774"
+SSID = "kevin"
+PASSWORD = "1234567890"
 
 # Función para conectar al WiFi
 def connect_wifi():
@@ -54,12 +52,14 @@ def connect_wifi():
 def map_value(x, in_min, in_max, out_min, out_max):
     return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
-# Configurar velocidad del motor
+# Configurar velocidad del motor (usando DAC)
 def set_motor_speed(level):
     global motor_speed
     motor_speed = level
-    duty = int((level / 2) * 65535)
-    motor_pwm.duty_u16(duty)
+    # Convertir nivel a voltaje (0-255 para el DAC)
+    # Mapeo el nivel (0, 10, 20, ..., 100) a un valor de 0 a 255
+    voltage = int((level * 255) / 100)  # Mapeo el nivel de 0-100 al rango 0-255
+    motor_dac.write(voltage)  # Establecer voltaje en el DAC
 
 # Configurar brillo del LED
 def set_led_brightness(brightness):
@@ -78,7 +78,7 @@ def set_servo_angle(angle):
 # Actualizar la pantalla OLED
 def update_oled():
     oled.fill(0)
-    oled.text("M:{0}% L:{1}% S:{2}°".format(motor_speed * 50, led_brightness, servo_angle), 0, 0)
+    oled.text("M:{0}% L:{1}% S:{2}°".format(motor_speed, led_brightness, servo_angle), 0, 0)
     oled.show()
 
 # Iniciar servidor web
@@ -96,7 +96,7 @@ def start_server():
         if "/motor?speed=" in request:
             try:
                 level = int(request.split("/motor?speed=")[1].split(" ")[0])
-                if 0 <= level <= 2:
+                if 0 <= level <= 100 and level % 10 == 0:
                     set_motor_speed(level)
                     update_oled()
             except:
@@ -129,7 +129,7 @@ def start_server():
         conn.close()
 
 # Configuración inicial
-set_motor_speed(motor_speed)
+set_motor_speed(0)
 set_led_brightness(led_brightness)
 set_servo_angle(servo_angle)
 oled.fill(0)
