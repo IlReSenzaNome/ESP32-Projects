@@ -2,10 +2,10 @@ from machine import Pin, DAC, PWM, SoftI2C
 import time
 import network
 import socket
-from ssd1306 import SSD1306_I2C
+# from ssd1306 import SSD1306_I2C
 
 # Inicializar DAC para el motor DC
-motor_dac = DAC(Pin(26))  # Usamos el canal DAC2 en GPIO 26
+# motor_dac = DAC(Pin(26))  # Usamos el canal DAC2 en GPIO 26
 
 # Inicializar LED controlado por PWM
 led_pwm = PWM(Pin(13))
@@ -24,8 +24,8 @@ i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
 oled = SSD1306_I2C(WIDTH, HEIGHT, i2c)
 
 # Configuración WiFi
-SSID = "kevin"
-PASSWORD = "1234567890"
+SSID = "NETLIFE_VIVAS"
+PASSWORD = "Vivas1717940272*"
 
 # Función para conectar al WiFi
 def connect_wifi():
@@ -59,7 +59,7 @@ def set_motor_speed(level):
     # Convertir nivel a voltaje (0-255 para el DAC)
     # Mapeo el nivel (0, 10, 20, ..., 100) a un valor de 0 a 255
     voltage = int((level * 255) / 100)  # Mapeo el nivel de 0-100 al rango 0-255
-    motor_dac.write(voltage)  # Establecer voltaje en el DAC
+    # motor_dac.write(voltage)  # Establecer voltaje en el DAC
 
 # Configurar brillo del LED
 def set_led_brightness(brightness):
